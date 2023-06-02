@@ -19,5 +19,5 @@ jobs:
         run: |
           black .
           mypy schemander.py
-          pytest
+          pytest --cov-report=json:report-cov.json --junitxml=report-tests.xml
 
