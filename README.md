@@ -16,40 +16,4 @@ When working with JSON is common to have situations in which string values are "
 
 Moreover when converting a JSON in to a data structure, we usually have to pass through a dictionary, and then "cast" in to the desired representation we desire. For this we define a `Schema` from which we need to extend in order to define a schema where you will define attributes with a type-hint, `int`, `float`, `str`, `bool`, `typing.List` with a given type to have a homogeneous array (heterogeneous, are not supported) or a _class_ that will take the field value as only argument for construction, such as `UUID`, or some of the `InternalObjectTypeString` or `RegexValidatedString`.
 
-An example on how to write for a _user_ could be:
-
-```python
-from uuid import UUID
-from schemander import (
-    Date,
-    Email,
-    IANATimeZone,
-    Phone,
-    Schema,
-)
-
-class User(Schema):
-    id: UUID
-    name_first: str
-    name_middle: str | None
-    name_last: str
-    email: Email
-    phone: Phone | None
-    date_of_birth: Date
-    timezone: IANATimeZone
-
-# This would be a usual result when decoding a JSON.
-data = {
-    "id": "5f85b586-a08b-4a1f-8086-4e6228a7aa7f",
-    "name_first": "Jenny",
-    "name_last": "Totone",
-    "date_of_birth": "1990-01-01",
-    "email": "example@example.com",
-    "phone": "+1 (619) 867-5309",
-    "timezone": "America/Los_Angeles",
-}
-
-obj = User.from_dict(data)
-print(obj)
-```
-
+An example on how to write for a _user_ could be found at `./example.py`.

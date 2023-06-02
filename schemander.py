@@ -76,14 +76,14 @@ class DateTime(InternalObjectTypeString):
 
 
 class JWTDecodeKwargs(t.TypedDict, total=False):
-    key: t.Union["jwt.algorithms.AllowedPublicKeys", str, bytes]
+    key: t.Union["jwt.algorithms.AllowedPublicKeys", str, bytes]  # type: ignore
     algorithms: list[str]
     options: dict[str, t.Any] | None
     detached_payload: bytes | None
 
 
 class JWTEncodeKwargs(t.TypedDict, total=False):
-    key: t.Union["jwt.algorithms.AllowedPrivateKeys", str, bytes]
+    key: t.Union["jwt.algorithms.AllowedPrivateKeys", str, bytes]  # type: ignore
     algorithm: str
     headers: JsonRoot | None
     json_encoder: type[JSONEncoder] | None
@@ -153,7 +153,10 @@ class Phone(InternalObjectTypeString):
                 value, phonenumbers.PhoneNumber
             ):
                 raise TypeError
-            obj = phonenumbers.parse(value, None)
+            if isinstance(value, phonenumbers.PhoneNumber):
+                obj = value
+            else:
+                obj = phonenumbers.parse(value, None)
         except (TypeError, phonenumbers.NumberParseException):
             raise ValueError
         string = phonenumbers.format_number(

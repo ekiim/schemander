@@ -7,6 +7,7 @@ from schemander import (
     Schema,
 )
 
+
 class User(Schema):
     id: UUID
     name_first: str
@@ -16,6 +17,7 @@ class User(Schema):
     phone: Phone | None
     date_of_birth: Date
     timezone: IANATimeZone
+
 
 # This would be a usual result when decoding a JSON.
 data = {

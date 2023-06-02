@@ -20,6 +20,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "black",
+    "build",
     "mypy",
     "pytest", 
     "pytest-cov",
@@ -40,7 +41,6 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-# packages = ["odeanimate"]
 license-files = ["LICENSE.txt"]
 
 [tool.setuptools.packages.find]
@@ -52,9 +52,13 @@ testpaths = ["tests"]
 
 [tool.pytest.plugins]
 cov = {source = "schemander"}
-doctestplus = {}
 
 [tool.black]
 line-length = 80
 docstring-style = 'ignore'
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
 
