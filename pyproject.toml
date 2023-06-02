@@ -1,5 +1,5 @@
 [project]
-version = "0.0.1"
+version = "0.0.2"
 name = "schemander"
 authors = [
     { name="Miguel Alejandro Salgado Zapien", email="ekiim@ekiim.xyz"},
@@ -24,8 +24,9 @@ dev = [
     "mypy",
     "pytest", 
     "pytest-cov",
-    "types-PyJWT",
     "python-lsp-server[all]",
+    "types-PyJWT",
+    "twine",
 ]
 
 
