@@ -1,0 +1,60 @@
+[project]
+version = "0.0.1"
+name = "schemander"
+authors = [
+    { name="Miguel Alejandro Salgado Zapien", email="ekiim@ekiim.xyz"},
+]
+description = "A single file schema validator for dictionaries."
+readme="README.md"
+requires-python = ">= 3.11"
+license = {text = "GPL-2.0"}
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "PyJWT",
+    "phonenumbers>=3.12.32"
+]
+[project.optional-dependencies]
+dev = [
+    "black",
+    "mypy",
+    "pytest", 
+    "pytest-cov",
+    "types-PyJWT",
+    "python-lsp-server[all]",
+]
+
+
+[metadata]
+license = "GPL 2"
+
+[project.urls]
+"Homepage" = "https://schemander.ekiim.xyz"
+"Source" = "https://github.com/ekiim/schemander"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# packages = ["odeanimate"]
+license-files = ["LICENSE.txt"]
+
+[tool.setuptools.packages.find]
+include = ["schemander"]
+
+[tool.pytest.ini_options]
+addopts = "-q --doctest-modules --cov=schemander --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.pytest.plugins]
+cov = {source = "schemander"}
+doctestplus = {}
+
+[tool.black]
+line-length = 80
+docstring-style = 'ignore'
+
