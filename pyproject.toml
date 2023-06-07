@@ -1,5 +1,5 @@
 [project]
-version = "0.0.2"
+version = "0.0.3"
 name = "schemander"
 authors = [
     { name="Miguel Alejandro Salgado Zapien", email="ekiim@ekiim.xyz"},
@@ -43,9 +43,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 license-files = ["LICENSE"]
+py-modules = ["schemander"]
 
-[tool.setuptools.packages.find]
-include = ["schemander"]
 
 [tool.pytest.ini_options]
 addopts = "-q --doctest-modules --cov=schemander --cov-report=term-missing"
