@@ -25,7 +25,6 @@ JsonType = t.Union[
     None, int, float, str, bool, list["JsonType"], dict[str, "JsonType"]
 ]
 JsonRoot = dict[str, JsonType]
-SchemaType = t.TypeVar("SchemaType", bound="Schema")
 
 
 class InternalObjectTypeString(str):
@@ -153,9 +152,11 @@ class Phone(InternalObjectTypeString):
             if not is_string and not is_phone_obj:
                 raise TypeError
             if is_phone_obj:
-                obj = value
+                obj: phonenumbers.PhoneNumber = value  # type: ignore
             else:
-                obj = phonenumbers.parse(value, None, keep_raw_input=True)
+                obj = phonenumbers.parse(
+                    value, None, keep_raw_input=True  # type: ignore
+                )
         except (TypeError, phonenumbers.NumberParseException) as e:
             raise ValueError
 
@@ -303,8 +304,7 @@ class Schema(metaclass=MetaSchema):
         return {k: v for k, v in self.to_dict().items() if v is not None}
 
     @classmethod
-    def from_dict(cls, data: JsonRoot | SchemaType) -> SchemaType:
-
+    def from_dict(cls, data: t.Union[JsonRoot, "Schema"]) -> "Schema":
         if isinstance(data, Schema):
             return data
 
