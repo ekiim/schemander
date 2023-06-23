@@ -26,7 +26,7 @@ data = {
     "name_last": "Totone",
     "date_of_birth": "1990-01-01",
     "email": "example@example.com",
-    "phone": "+1 (619) 867-5309",
+    "phone": "+16198675309",
     "timezone": "America/Los_Angeles",
 }
 

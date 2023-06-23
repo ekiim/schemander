@@ -8,7 +8,12 @@ on:
       - completed
 
 jobs:
-  tests:
+  success:
+     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+     steps:
+       - run: echo "Testing workflow was a failure"
+       - run: exit 1
+  publish:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
     environment:
