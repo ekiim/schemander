@@ -396,6 +396,8 @@ class SchemaEncoder(JSONEncoder):
     def default(self, obj):  # type: ignore
         if isinstance(obj, UUID):
             return str(obj)
+        if isinstance(obj, Enum):
+            return obj.value
         if isinstance(obj, date):
             return obj.isoformat()
         if isinstance(obj, Schema):

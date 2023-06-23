@@ -1,18 +1,13 @@
-from dataclasses import dataclass
 from datetime import (
     date,
     datetime,
     timezone,
     timedelta,
 )
+from enum import Enum
 from json import dumps, loads
 from typing import List, Tuple, TypedDict
 from uuid import UUID
-from zoneinfo import (
-    ZoneInfo,
-    ZoneInfoNotFoundError,
-)
-from phonenumbers import PhoneNumber
 
 import pytest
 from schemander import (
@@ -398,6 +393,14 @@ def test_json_encoder():
     class SchemaTest(Schema):
         field: str
 
+    class DummyEnumOne(Enum):
+        A = 1
+        B = 2
+
+    class DummyEnumTwo(Enum):
+        A = "1"
+        B = "2"
+
     data = {
         "a": SchemaTest(field="1"),
         "b": UUID("eb02a39e-4fa4-422c-954b-5446fd71a5e5"),
@@ -405,6 +408,8 @@ def test_json_encoder():
         "d": datetime(1990, 1, 1, 1, 1),
         "e": "str",
         "f": Phone("+526641231234"),
+        "g": DummyEnumOne.A,
+        "h": DummyEnumTwo.A,
     }
 
     json = dumps(data, cls=SchemaEncoder)
