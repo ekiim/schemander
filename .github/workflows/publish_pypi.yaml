@@ -16,7 +16,7 @@ jobs:
       url: https://pypi.org/p/schemander
     permissions:
       id-token: write
-    if: ${{ github.event.workflow_run.conclusion != 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.11
