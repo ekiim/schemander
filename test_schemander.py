@@ -38,22 +38,6 @@ class JWTDummy(JWTToken):
         )
 
 
-PHONE_CASES = (
-    (
-        Phone,
-        "+52 664 123 1234",
-        "+526641231234",
-        PhoneNumber(country_code=52, national_number=6641231234),
-        PhoneNumber,
-    ),
-    (
-        Phone,
-        "+52 (664) 123-1234",
-        "+526641231234",
-        PhoneNumber(country_code=52, national_number=6641231234),
-        PhoneNumber,
-    ),
-)
 DATE_CASES = (
     (
         Date,
@@ -102,14 +86,11 @@ DATE_CASES = (
 )
 
 FAIL_CASES = (
-    (
-        Phone,
-        "000000000000",
-    ),
-    (
-        DateTime,
-        "19900101",
-    ),
+    (Phone, "000000000000"),
+    (Phone, "+526ZA99321234"),
+    (Phone, "+52 664 123 1234"),
+    (Phone, "+52 (664) 123-1234"),
+    (DateTime, "19900101"),
 )
 
 TYPES_GOOD = (
@@ -279,6 +260,26 @@ def test_from_dict_with_extra_arguments_fail():
         obj = DummySchemaOne.from_dict(data)
 
 
+def test_from_dict_with_schema_on_data():
+    class DummySchemaOne(Schema):
+        field: str
+
+    class DummySchemaTwo(Schema):
+        field: List[DummySchemaOne]
+
+    data = {
+        "field": [
+            {"field": "value"},
+            DummySchemaOne.from_dict({"field": "value"}),
+        ],
+    }
+
+    obj = DummySchemaTwo.from_dict(data)
+
+    assert isinstance(obj.field, list)
+    assert all((isinstance(value, DummySchemaOne) for value in obj.field))
+
+
 def test_bad_type_hint_type():
     with pytest.raises(AttributeError) as e_info:
 
@@ -405,11 +406,12 @@ def test_json_encoder():
         "e": "str",
         "f": Phone("+526641231234"),
     }
+
     json = dumps(data, cls=SchemaEncoder)
     parsed_json = loads(json)
     re_dump_json = dumps(parsed_json)
 
-    assert json == re_dump_json
+    assert json == re_dump_json, re_dump_json
 
 
 def test_schema_inequality_same_schema_different_values():
@@ -431,9 +433,9 @@ def test_schema_inequality_different_schema():
 
 @pytest.mark.parametrize(
     ("_type", "in_string", "out_string", "out_object", "out_obj_class"),
-    (*PHONE_CASES, *DATE_CASES),
+    (*DATE_CASES,),
 )
-def test_interal_object_type_str(
+def test_internal_object_type_str(
     _type, in_string, out_string, out_object, out_obj_class
 ):
     value = _type(in_string)
@@ -448,7 +450,7 @@ def test_interal_object_type_str(
     ("_type", "in_string"),
     FAIL_CASES,
 )
-def test_interal_object_type_str_error(_type, in_string):
+def test_internal_object_type_str_error(_type, in_string):
     with pytest.raises(ValueError) as e_info:
         value = _type(in_string)
 

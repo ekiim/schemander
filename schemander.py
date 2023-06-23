@@ -5,10 +5,9 @@ from datetime import (
     datetime,
     timezone,
 )
+from enum import Enum
 from functools import reduce
-from itertools import chain
 from json import JSONEncoder
-from random import choice
 from re import fullmatch
 from types import UnionType, NoneType
 from uuid import UUID
@@ -148,21 +147,24 @@ class Phone(InternalObjectTypeString):
     def convert(
         cls, value: str | phonenumbers.PhoneNumber
     ) -> t.Tuple[str, phonenumbers.PhoneNumber]:
+        is_string = isinstance(value, str)
+        is_phone_obj = isinstance(value, phonenumbers.PhoneNumber)
         try:
-            if not isinstance(value, str) and not isinstance(
-                value, phonenumbers.PhoneNumber
-            ):
+            if not is_string and not is_phone_obj:
                 raise TypeError
-            if isinstance(value, phonenumbers.PhoneNumber):
+            if is_phone_obj:
                 obj = value
             else:
-                obj = phonenumbers.parse(value, None)
-        except (TypeError, phonenumbers.NumberParseException):
+                obj = phonenumbers.parse(value, None, keep_raw_input=True)
+        except (TypeError, phonenumbers.NumberParseException) as e:
             raise ValueError
+
         string = phonenumbers.format_number(
             obj,
             phonenumbers.PhoneNumberFormat.E164,
         )
+        if obj.raw_input and obj.raw_input != string:
+            raise ValueError("Incorrect format for phone number.")
         return string, obj
 
 
@@ -301,7 +303,11 @@ class Schema(metaclass=MetaSchema):
         return {k: v for k, v in self.to_dict().items() if v is not None}
 
     @classmethod
-    def from_dict(cls, data: JsonRoot) -> "Schema":
+    def from_dict(cls, data: JsonRoot | SchemaType) -> SchemaType:
+
+        if isinstance(data, Schema):
+            return data
+
         annotations = cls._annotations().keys()
         if set(data.keys()) - annotations:
             raise ValueError("Arguments outside schema were provided.")
